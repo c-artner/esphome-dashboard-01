@@ -9,12 +9,17 @@ template:
         minutes: "/5"  # alle 5 Minuten aktualisieren
       - platform: homeassistant
         event: start
-
+    action:
+      - service: weather.get_forecasts
+        target:
+          entity_id: weather.forecast_home
+        data:
+          type: daily
+        response_variable: forecasts_var
     sensor:
         name: Dashboard 01
         unique_id: dashboard_01
         state: "OK"
-
         attributes:
           Solar_Akkuleistung: >
             {{ states('sensor.system_anker_solix_sb_akkuleistung') | upper }}
@@ -26,9 +31,7 @@ template:
             {{ states('sensor.system_anker_solix_sb_solarleistung') | upper }}
           Solar_Netzbezug: >
             {{ states('sensor.smart_meter_netzbezug') | upper }}
-            
-            
-            
+
           Solar_Netzbezug_taeglich: >
             {{ states('sensor.system_anker_solix_taglicher_netzbezug') | upper }}
           Solar_Solarertrag_taeglich: >
@@ -66,52 +69,65 @@ template:
             {{ state_attr('sun.sun', 'next_rising') | as_timestamp | timestamp_custom('%H:%M', true) }}
           Sonnenuntergang: >
             {{ state_attr('sun.sun', 'next_setting') | as_timestamp | timestamp_custom('%H:%M', true) }}
+
         
           Wetter_Vorhersage_Tag_0: >
-            {{ forecasts_var['weather.forecast_home'].forecast[0].datetime | as_timestamp | timestamp_custom('%a', True) }}
+            {% set ts = forecasts_var['weather.forecast_home'].forecast[0].datetime | as_timestamp %}
+            {% set day_map = {'Mon':'Mo', 'Tue':'Di', 'Wed':'Mi', 'Thu':'Do', 'Fri':'Fr', 'Sat':'Sa', 'Sun':'So'} %}
+            {{ day_map[ts | timestamp_custom('%a', True)] }}
+#            {{ forecasts_var['weather.forecast_home'].forecast[0].datetime | as_timestamp | timestamp_custom('%a', True) }}
           Wetter_Vorhersage_Zustand_Tag_0: >
             {{ forecasts_var['weather.forecast_home'].forecast[0].condition }}
           Wetter_Vorhersage_Temperatur_Tag_0: >
             {{ forecasts_var['weather.forecast_home'].forecast[0].temperature | round }}
 
           Wetter_Vorhersage_Tag_1: >
-            {{ forecasts_var['weather.forecast_home'].forecast[1].datetime | as_timestamp | timestamp_custom('%a', True) }}
+            {% set ts = forecasts_var['weather.forecast_home'].forecast[1].datetime | as_timestamp %}
+            {% set day_map = {'Mon':'Mo', 'Tue':'Di', 'Wed':'Mi', 'Thu':'Do', 'Fri':'Fr', 'Sat':'Sa', 'Sun':'So'} %}
+            {{ day_map[ts | timestamp_custom('%a', True)] }}
+#            {{ forecasts_var['weather.forecast_home'].forecast[1].datetime | as_timestamp | timestamp_custom('%a', True) }}
           Wetter_Vorhersage_Zustand_Tag_1: >
             {{ forecasts_var['weather.forecast_home'].forecast[1].condition }}
           Wetter_Vorhersage_Temperatur_Tag_1: >
             {{ forecasts_var['weather.forecast_home'].forecast[1].temperature | round  }}
 
           Wetter_Vorhersage_Tag_2: >
-            {{ forecasts_var['weather.forecast_home'].forecast[2].datetime | as_timestamp | timestamp_custom('%a', True) }}
+            {% set ts = forecasts_var['weather.forecast_home'].forecast[2].datetime | as_timestamp %}
+            {% set day_map = {'Mon':'Mo', 'Tue':'Di', 'Wed':'Mi', 'Thu':'Do', 'Fri':'Fr', 'Sat':'Sa', 'Sun':'So'} %}
+            {{ day_map[ts | timestamp_custom('%a', True)] }}
+#            {{ forecasts_var['weather.forecast_home'].forecast[2].datetime | as_timestamp | timestamp_custom('%a', True) }}
           Wetter_Vorhersage_Zustand_Tag_2: >
             {{ forecasts_var['weather.forecast_home'].forecast[2].condition }}
           Wetter_Vorhersage_Temperatur_Tag_2: >
             {{ forecasts_var['weather.forecast_home'].forecast[2].temperature | round  }}
 
           Wetter_Vorhersage_Tag_3: >
-            {{ forecasts_var['weather.forecast_home'].forecast[3].datetime | as_timestamp | timestamp_custom('%a', True) }}
+            {% set ts = forecasts_var['weather.forecast_home'].forecast[3].datetime | as_timestamp %}
+            {% set day_map = {'Mon':'Mo', 'Tue':'Di', 'Wed':'Mi', 'Thu':'Do', 'Fri':'Fr', 'Sat':'Sa', 'Sun':'So'} %}
+            {{ day_map[ts | timestamp_custom('%a', True)] }}
+#            {{ forecasts_var['weather.forecast_home'].forecast[3].datetime | as_timestamp | timestamp_custom('%a', True) }}
           Wetter_Vorhersage_Zustand_Tag_3: >
             {{ forecasts_var['weather.forecast_home'].forecast[3].condition }}
           Wetter_Vorhersage_Temperatur_Tag_3: >
             {{ forecasts_var['weather.forecast_home'].forecast[3].temperature | round  }}
 
           Wetter_Vorhersage_Tag_4: >
-            {{ forecasts_var['weather.forecast_home'].forecast[4].datetime | as_timestamp | timestamp_custom('%a', True) }}
+            {% set ts = forecasts_var['weather.forecast_home'].forecast[4].datetime | as_timestamp %}
+            {% set day_map = {'Mon':'Mo', 'Tue':'Di', 'Wed':'Mi', 'Thu':'Do', 'Fri':'Fr', 'Sat':'Sa', 'Sun':'So'} %}
+            {{ day_map[ts | timestamp_custom('%a', True)] }}
+#            {{ forecasts_var['weather.forecast_home'].forecast[4].datetime | as_timestamp | timestamp_custom('%a', True) }}
           Wetter_Vorhersage_Zustand_Tag_4: >
             {{ forecasts_var['weather.forecast_home'].forecast[4].condition }}
           Wetter_Vorhersage_Temperatur_Tag_4: >
             {{ forecasts_var['weather.forecast_home'].forecast[4].temperature | round  }}
 
           Wetter_Vorhersage_Tag_5: >
-            {{ forecasts_var['weather.forecast_home'].forecast[5].datetime | as_timestamp | timestamp_custom('%a', True) }}
+            {% set ts = forecasts_var['weather.forecast_home'].forecast[5].datetime | as_timestamp %}
+            {% set day_map = {'Mon':'Mo', 'Tue':'Di', 'Wed':'Mi', 'Thu':'Do', 'Fri':'Fr', 'Sat':'Sa', 'Sun':'So'} %}
+            {{ day_map[ts | timestamp_custom('%a', True)] }}
+#            {{ forecasts_var['weather.forecast_home'].forecast[5].datetime | as_timestamp | timestamp_custom('%a', True) }}
           Wetter_Vorhersage_Zustand_Tag_5: >
             {{ forecasts_var['weather.forecast_home'].forecast[5].condition }}
           Wetter_Vorhersage_Temperatur_Tag_5: >
             {{ forecasts_var['weather.forecast_home'].forecast[5].temperature | round  }}
-    action:
-      - service: weather.get_forecasts
-        target:
-          entity_id: weather.forecast_home
-        data:
-          type: daily
-        response_variable: forecasts_var
+
