@@ -63,3 +63,43 @@ Here are some other repos that I referenced from:
 - https://github.com/savikko/smarthome
 
 *Weatherman* is a reference to the song [*Blame it on the Weatherman* by B*Witched](https://www.youtube.com/watch?v=HTwiK8z2m_Y). If you're late to your date because of this, blame it on the Weatherman.
+
+
+next idea:
+Calender import
+not so easy HA isn't writing in Attributes
+
+more informations:
+https://bitbucket.org/wilkeservices/eink_calendar/src/main/automation.yaml
+
+Didn't worked proper:
+
+alias: Familienkalender aktualisieren
+trigger:
+  - platform: time_pattern
+    minutes: "/5"
+action:
+  - service: calendar.get_events
+    target:
+      entity_id: calendar.familie
+    data:
+      duration:
+        hours: 72
+    response_variable: events_raw
+
+  - service: input_text.set_value
+    target:
+      entity_id: input_text.familien_events_json
+    data:
+      value: "{{ events_raw['calendar.familie'].events | tojson }}"
+mode: single
+
+Via Einstellungen → Geräte & Dienste → Helfer → +:
+
+Typ: Langer Text (input_text)
+
+Name: input_text.familien_events_json
+
+Maximale Länge: z. B. 20 000 Zeichen
+
+Initialwert: leer oder []
