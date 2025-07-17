@@ -1,0 +1,31 @@
+alias: TEST
+description: ""
+triggers: []
+conditions: []
+actions:
+  - action: calendar.get_events
+    metadata: {}
+    data:
+      duration:
+        hours: 72
+        minutes: 0
+        seconds: 0
+    response_variable: agenda
+    target:
+      entity_id:
+        - calendar.familie
+        - calendar.geburtstage
+  - action: input_text.set_value
+    metadata: {}
+    data:
+      value: >-
+        Familie: {% for event in agenda["calendar.familie"]["events"]%}
+        {{event.start[:10] }} {% if 'T' in event.start %} ab {{
+        event.start[11:19] }} {% endif %}{% if 'T' in event.end %} bis {{
+        event.end[11:19] }} {% endif %}: {{ event.summary }} | {% endfor %} {%
+        for event in agenda["calendar.geburtstage"]["events"] %} Geburtstag: {{
+        event.start}}: {{event.summary }}     {% endfor %}
+    target:
+      entity_id:
+        - input_text.dashboard_01_kalender
+mode: single
