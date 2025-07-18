@@ -19,13 +19,9 @@ actions:
     metadata: {}
     data:
       value: >-
-        Familie: {% for event in agenda["calendar.familie"]["events"]%}
-        {{event.start[:10] }} {% if 'T' in event.start %} ab {{
-        event.start[11:19] }} {% endif %}{% if 'T' in event.end %} bis {{
-        event.end[11:19] }} {% endif %}: {{ event.summary }} | {% endfor %} {%
-        for event in agenda["calendar.geburtstage"]["events"] %} Geburtstag: {{
-        event.start}}: {{event.summary }}     {% endfor %}
+        {% for event in agenda["calendar.familie"]["events"] %}{% set start_dt = as_datetime(event.start) %}{% set end_dt = as_datetime(event.end) %}{{ start_dt.strftime('%a %d.%m') | replace('Mon','Mo') | replace('Tue','Di') | replace('Wed','Mi') | replace('Thu','Do') | replace('Fri','Fr') | replace('Sat','Sa') | replace('Sun','So') }}{% if 'T' in event.start %} ab {{ start_dt.strftime('%H:%M') }}{% endif %}{% if 'T' in event.end %} bis {{ end_dt.strftime('%H:%M') }}{% endif %}: {{ event.summary }}|{% endfor %}{% for event in agenda["calendar.geburtstage"]["events"] %}{% set start_dt = as_datetime(event.start) %}Geburtstag:|{{ start_dt.strftime('%a %d.%m.%Y') | replace('Mon','Mo') | replace('Tue','Di') | replace('Wed','Mi') | replace('Thu','Do') | replace('Fri','Fr') | replace('Sat','Sa') | replace('Sun','So') }}: {{ event.summary }}{% endfor %}
     target:
       entity_id:
         - input_text.dashboard_01_kalender
 mode: single
+#value input_text muss ein einzeiler sein!
