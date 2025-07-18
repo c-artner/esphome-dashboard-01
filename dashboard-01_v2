@@ -1,5 +1,3 @@
-combined multiple sources incl. ChatGPT
-
 substitutions:
   web_user: "test"
   web_password: "test"
@@ -56,9 +54,9 @@ captive_portal:
     
 
 #https://github.com/Nerdiyde/ESPHomeSnippets/blob/main/Snippets/eInk_frame_insert_ribba_5inchX7inch/ribba-frame-weater-dev1.yaml
-sun:
-  latitude: 48.6229°
-  longitude: 14.8229°
+#sun:
+#  latitude: 48.6229°
+#  longitude: 14.8229°
 
 interval:
   - interval: 3min
@@ -98,6 +96,26 @@ interval:
           - script.execute: update_screen
         else:
           - logger.log: "Screen update skipped since refresh is not wanted."
+
+  - interval: 5min
+    startup_delay: 3min
+    then:
+      # refresh screen only if needed
+      if:
+        condition:
+          and:
+            - binary_sensor.is_on: screen_refresh_wanted
+            - binary_sensor.is_on: jemand_zu_hause
+            - lambda: |-
+                auto time = id(homeassistant_time).now();
+                return time.hour >= 6 && time.hour < 22;
+        then:  
+          - script.execute: update_screen
+        else:
+          - logger.log: "Screen update skipped since refresh is not wanted."
+
+
+
 
 deep_sleep:
   id: deep_sleep_1
@@ -179,6 +197,36 @@ time:
         #     {{ forecasts_var['weather.forecast_home'].forecast[2].temperature | round  }} °C
 
 text_sensor:
+
+  - platform: homeassistant
+    name: "Kalender Übersicht"
+    entity_id: input_text.dashboard_01_kalender
+    id: kalender_uebersicht
+
+  - platform: homeassistant
+#    name: "Icon Christian"
+    entity_id: sensor.dashboard_01
+    id: person_christian_artner
+    attribute: person_christian_artner
+
+  - platform: homeassistant
+#    name: "Icon Verena"
+    entity_id: sensor.dashboard_01
+    id: person_verena_artner
+    attribute: person_verena_artner
+
+  - platform: homeassistant
+#    name: "Icon Christian"
+    entity_id: sensor.dashboard_01
+    id: person_konstantin_artner
+    attribute: person_konstantin_artner
+
+  - platform: homeassistant
+#    name: "Icon Verena"
+    entity_id: sensor.dashboard_01
+    id: person_jonathan_artner
+    attribute: person_jonathan_artner
+
   - platform: version
     name: "ESPHome Version"
 
@@ -213,9 +261,9 @@ text_sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Vorhersage_Zustand_Tag_0
     id: weather_forecast_condition_0
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return (x=="unavailable") ? "missing" : x;
@@ -227,9 +275,9 @@ text_sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Vorhersage_Zustand_Tag_1
     id: weather_forecast_condition_1
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return (x=="unavailable") ? "missing" : x;
@@ -240,9 +288,9 @@ text_sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Vorhersage_Zustand_Tag_2
     id: weather_forecast_condition_2
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return (x=="unavailable") ? "missing" : x;
@@ -253,9 +301,9 @@ text_sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Vorhersage_Zustand_Tag_3
     id: weather_forecast_condition_3
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return (x=="unavailable") ? "missing" : x;
@@ -266,9 +314,9 @@ text_sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Vorhersage_Zustand_Tag_4
     id: weather_forecast_condition_4
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return (x=="unavailable") ? "missing" : x;
@@ -279,9 +327,9 @@ text_sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Vorhersage_Zustand_Tag_5
     id: weather_forecast_condition_5
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return (x=="unavailable") ? "missing" : x;
@@ -291,9 +339,9 @@ text_sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Vorhersage_Tag_0
     id: weather_forecast_timestamp_0
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return (x=="unavailable") ? "99:99" : x;
@@ -304,9 +352,9 @@ text_sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Vorhersage_Tag_1
     id: weather_forecast_timestamp_1
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return (x=="unavailable") ? "99:99" : x;
@@ -316,9 +364,9 @@ text_sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Vorhersage_Tag_2
     id: weather_forecast_timestamp_2
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return (x=="unavailable") ? "99:99" : x;
@@ -328,9 +376,9 @@ text_sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Vorhersage_Tag_3
     id: weather_forecast_timestamp_3
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return (x=="unavailable") ? "99:99" : x;
@@ -340,9 +388,9 @@ text_sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Vorhersage_Tag_4
     id: weather_forecast_timestamp_4
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return (x=="unavailable") ? "99:99" : x;
@@ -352,9 +400,9 @@ text_sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Vorhersage_Tag_5
     id: weather_forecast_timestamp_5
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return (x=="unavailable") ? "99:99" : x;
@@ -364,9 +412,9 @@ text_sensor:
     entity_id: sensor.dashboard_01
     attribute: Sonnenaufgang
     id: weather_sunrise
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return (x=="unavailable") ? "99:99" : x;
@@ -377,13 +425,14 @@ text_sensor:
     entity_id: sensor.dashboard_01
     attribute: Sonnenuntergang
     id: weather_sunset
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return (x=="unavailable") ? "99:99" : x;
 #          return isnan(x) ? 999 : x;
+
 
 #konvertierung notwendig
 #  - platform: homeassistant
@@ -414,7 +463,6 @@ text_sensor:
 #          return (x=="unavailable") ? "99:99" : x;
 #          return isnan(x) ? 999 : x;
 
-
   - platform: homeassistant
     entity_id: binary_sensor.dashboard_01_refresh_wanted
     id: display_refresh_wanted_external_sensor
@@ -432,45 +480,62 @@ text_sensor:
 #    type: sunset
 #    format: "%H:%M"
 
-  - platform: template
+#CA Berechnung nach HA verschoben
+  - platform: homeassistant
+    #entity_id: sensor.gw1100_winddir
+    entity_id: sensor.dashboard_01
+    attribute: Wetter_Windrichtung_jetzt
     id: wind_cardinal_direction
-    name: "Wind cardinal direction"
-    lambda: |-
-      float heading = id(weather_wind_bearing_now).state;
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
+    filters:
+      - lambda: !lambda |-
+          return (x=="unavailable") ? "99:99" : x;
+#          return isnan(x) ? 999 : x;
 
-      std::string direction;
 
-      if (heading >= 337.5 || heading < 22.5) {
-        direction = "Nord";
-      } else if (heading >= 22.5 && heading < 67.5) {
-        direction = "Nord-Ost";
-      } else if (heading >= 67.5 && heading < 112.5) {
-        direction = "Ost";
-      } else if (heading >= 112.5 && heading < 157.5) {
-        direction = "Sued-Ost";
-      } else if (heading >= 157.5 && heading < 202.5) {
-        direction = "Sued";
-      } else if (heading >= 202.5 && heading < 247.5) {
-        direction = "Sued-West";
-      } else if (heading >= 247.5 && heading < 292.5) {
-        direction = "West";
-      } else if (heading >= 292.5 && heading < 337.5) {
-        direction = "Nord-West";
-      } else {
-        direction = "Unbekannt";
-      }
-
-      return direction;
+#  - platform: template
+#    id: wind_cardinal_direction
+#    name: "Wind cardinal direction"
+#    lambda: |-
+#      float heading = id(weather_wind_bearing_now).state;
+#
+#      std::string direction;
+#
+#      if (heading >= 337.5 || heading < 22.5) {
+#        direction = "Nord";
+#      } else if (heading >= 22.5 && heading < 67.5) {
+#        direction = "Nord-Ost";
+#      } else if (heading >= 67.5 && heading < 112.5) {
+#        direction = "Ost";
+#      } else if (heading >= 112.5 && heading < 157.5) {
+#        direction = "Sued-Ost";
+#      } else if (heading >= 157.5 && heading < 202.5) {
+#        direction = "Sued";
+#      } else if (heading >= 202.5 && heading < 247.5) {
+#        direction = "Sued-West";
+#      } else if (heading >= 247.5 && heading < 292.5) {
+#        direction = "West";
+#      } else if (heading >= 292.5 && heading < 337.5) {
+#        direction = "Nord-West";
+#      } else {
+#        direction = "Unbekannt";
+#      }
+#
+#      return direction;
 
 sensor:
+
+
   - platform: homeassistant
 #    entity_id: sensor.gw1100_temp
     entity_id: sensor.dashboard_01
     attribute: Wetter_Temperatur_jetzt
     id: weather_temperature_now
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return isnan(x) ? 999 : x;
@@ -479,9 +544,9 @@ sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Vorhersage_Temperatur_Tag_0
     id: weather_forecast_temperature_0
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return isnan(x) ? 999 : x;
@@ -491,9 +556,9 @@ sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Vorhersage_Temperatur_Tag_1
     id: weather_forecast_temperature_1
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return isnan(x) ? 999 : x;
@@ -503,9 +568,9 @@ sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Vorhersage_Temperatur_Tag_2
     id: weather_forecast_temperature_2
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return isnan(x) ? 999 : x;
@@ -515,9 +580,9 @@ sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Vorhersage_Temperatur_Tag_3
     id: weather_forecast_temperature_3
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return isnan(x) ? 999 : x;
@@ -527,9 +592,9 @@ sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Vorhersage_Temperatur_Tag_4
     id: weather_forecast_temperature_4
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return isnan(x) ? 999 : x;
@@ -539,9 +604,9 @@ sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Vorhersage_Temperatur_Tag_5
     id: weather_forecast_temperature_5
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return isnan(x) ? 999 : x;
@@ -551,9 +616,9 @@ sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Luftfeuchtigkeit_jetzt
     id: weather_humidity_now
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return isnan(x) ? 999 : x;
@@ -563,9 +628,9 @@ sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Luftdruck_jetzt
     id: weather_airpressure_now
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return isnan(x) ? 999 : x;
@@ -575,9 +640,9 @@ sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Windgeschwindigkeit_jetzt
     id: weather_wind_speed_now
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return isnan(x) ? 999 : x;
@@ -587,34 +652,34 @@ sensor:
     entity_id: sensor.dashboard_01
     attribute: Wetter_Regen_jetzt
     id: weather_precipitation_amount_now
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return isnan(x) ? 999 : x;
 
-  - platform: homeassistant
-    #entity_id: sensor.gw1100_winddir
-    entity_id: sensor.dashboard_01
-    attribute: Wetter_Windrichtung_jetzt
-    id: weather_wind_bearing_now
-    on_value:
-      then:
-        - component.update: wind_cardinal_direction
-        - lambda: 'id(data_updated) = true;'
-    filters:
-      - lambda: !lambda |-
-          return isnan(x) ? 999 : x;
+#  - platform: homeassistant
+#    #entity_id: sensor.gw1100_winddir
+#    entity_id: sensor.dashboard_01
+#    attribute: Wetter_Windrichtung_jetzt
+#    id: weather_wind_bearing_now
+#    on_value:
+#      then:
+#        - component.update: wind_cardinal_direction
+#        - lambda: 'id(data_updated) = true;'
+#    filters:
+#      - lambda: !lambda |-
+#          return isnan(x) ? 999 : x;
 
   - platform: homeassistant
 #    entity_id: sensor.solarbank_ladestand
     entity_id: sensor.dashboard_01
     attribute: Solar_Ladestand
     id: solar_akku_level
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return isnan(x) ? 999 : x;
@@ -634,9 +699,9 @@ sensor:
     entity_id: sensor.dashboard_01
     attribute: Solar_Akkuleistung
     id: solar_akkuleistung
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return isnan(x) ? 999 : x;
@@ -646,9 +711,9 @@ sensor:
     entity_id: sensor.dashboard_01
     attribute: Solar_Solarleistung
     id: solar_solarleistung
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return isnan(x) ? 999 : x;
@@ -658,9 +723,9 @@ sensor:
     entity_id: sensor.dashboard_01
     attribute: Solar_Hausverbrauch
     id: solar_hausverbrauch
-    on_value:
-      then:
-        - lambda: 'id(data_updated) = true;'
+#    on_value:
+#      then:
+#        - lambda: 'id(data_updated) = true;'
     filters:
       - lambda: !lambda |-
           return isnan(x) ? 999 : x;
@@ -668,7 +733,7 @@ sensor:
   - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
     name: "WiFi Signal dB"
     id: wifi_signal_db
-    update_interval: 60s
+    update_interval: 300s
     entity_category: "diagnostic"
 
   - platform: copy # Reports the WiFi signal strength in %
@@ -743,6 +808,9 @@ sensor:
 #          return isnan(x) ? 999 : x;
 
 binary_sensor:
+  - platform: homeassistant
+    entity_id: binary_sensor.jemand_zu_hause
+    id: jemand_zu_hause
 
   - platform: gpio
     id: auto_sleep_activated_hw_switch
@@ -797,11 +865,12 @@ binary_sensor:
                   then:  
                     - script.execute: update_screen
 #ca
-#  - platform: template
-#    id: data_updated_trigger
-#    lambda: 'return id(data_updated);'
-#    on_press:
-#      then:
+  - platform: template
+    id: data_updated_trigger
+    lambda: 'return id(data_updated);'
+    on_press:
+      then:
+        - lambda: 'id(screen_refresh_wanted).publish_state(true);'
 #        - lambda: 'id(screen_refresh_wanted).publish_state(true);'
 #        - lambda: 'id(screen_refresh_wanted) = true;'
 #            id(data_updated) = false;  // zurücksetzen, damit es beim nächsten Mal wieder triggert
@@ -911,7 +980,15 @@ font:
   - file: 'fonts/GothamRnd-Book.ttf'
     id: font_small_book
     size: 18
-
+    glyphs: [ 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß', '!', '?', '.', ',', ':', ';', '-', '_', '+', '*', '/', '°',
+      '0','1','2','3','4','5','6','7','8','9', '%', 
+      'A','B','C','D','E','F','G','H','I','J','K','L','M',
+      'N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+      'a','b','c','d','e','f','g','h','i','j','k','l','m',
+      'n','o','p','q','r','s','t','u','v','w','x','y','z',
+      ' ']
+#alternative, speicherintensiver!
+#    glyphs: "auto"
   - file: 'fonts/GothamRnd-Bold.ttf'
     id: font_large_bold
     size: 90
@@ -920,17 +997,17 @@ font:
   - file: 'fonts/GothamRnd-Bold.ttf'
     id: font_title
     size: 54
-    glyphs: ['W', 'E', 'A', 'T', 'H', 'R', 'L', 'I', 'N', 'n', 'a', ' ']
+    glyphs: ['W', 'E', 'A', 'T', 'H', 'R', 'L', 'I', 'N', 'n', 'ä', 'ö', 'ü', 'a', ' ']
 
   - file: 'fonts/GothamRnd-Bold.ttf'
     id: font_medium_bold
     size: 30
-    # glyphs: [' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'M', 'I', 'N']
+    # glyphs: [' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'M', 'I', 'N', 'C', 'A', 'V', 'K', 'J']
 
   - file: 'fonts/GothamRnd-Bold.ttf'
     id: font_small_bold
     size: 18
-    # glyphs: [' ', '-', '°', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'C', 'M', 'I', 'N']
+    # glyphs: [' ', '-', '°', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'C', 'M', 'I', 'N', 'O', '.', 'D', 'S', 'A', 'F']
 
 
   # Include Material Design Icons font
@@ -978,6 +1055,29 @@ font:
       - "\U000F0A72" # mdi:solar-power
       - "\U000F1901" # mdi:home-battery
       - "\U000F192D" # mdi:transmission-tower-import
+      - "\U000F02DC" # mdi:home
+      - "\U000F00D6" # mdi:briefcase
+      - "\U000F0474" # mdi:school
+      - "\U000F04B8" # mdi:soccer
+      - "\U000F02D7" # mdi:help-circle
+      - "\U000F007A" # mdi:battery-10
+      - "\U000F007B" # mdi:battery-20
+      - "\U000F007C" # mdi:battery-30
+      - "\U000F007D" # mdi:battery-40
+      - "\U000F007E" # mdi:battery-50
+      - "\U000F007F" # mdi:battery-60
+      - "\U000F0080" # mdi:battery-70
+      - "\U000F0081" # mdi:battery-80
+      - "\U000F0082" # mdi:battery-90
+      - "\U000F0079" # mdi:battery
+      - "\U000F008E" # mdi:battery-outline
+      - "\U000F092E" # mdi-wifi-strength-off-outline
+      - "\U000F092F" # mdi-wifi-strength-outline
+      - "\U000F091F" # mdi-wifi-strength-1
+      - "\U000F0922" # mdi-wifi-strength-2
+      - "\U000F0925" # mdi-wifi-strength-3
+      - "\U000F0928" # mdi-wifi-strength-4
+
 #https://pictogrammers.com/library/mdi/
 
   - file: 'fonts/materialdesignicons-webfont.ttf'
@@ -988,30 +1088,31 @@ font:
   # Preview https://pictogrammers.github.io/@mdi/font/6.5.95/
   # Download: https://cdnjs.com/libraries/MaterialDesign-Webfont/6.5.95
   - file: 'fonts/materialdesignicons-webfont.ttf'
-    id: font_wifi_bat
+    id: font_mdi_small
     size: 20
-    glyphs: [
+    glyphs:  *mdi-weather-glyphs
+    # [
 
-      # Wifi
-      '󰤮', # F092E mdi-wifi-strength-off-outline
-      '󰤯', # F092F mdi-wifi-strength-outline
-      '󰤟', # F091F mdi-wifi-strength-1
-      '󰤢', # F0922 mdi-wifi-strength-2
-      '󰤥', # F0925 mdi-wifi-strength-3
-      '󰤨', # F0928 mdi-wifi-strength-4
+    #   # Wifi
+    #   '󰤮', # F092E mdi-wifi-strength-off-outline
+    #   '󰤯', # F092F mdi-wifi-strength-outline
+    #   '󰤟', # F091F mdi-wifi-strength-1
+    #   '󰤢', # F0922 mdi-wifi-strength-2
+    #   '󰤥', # F0925 mdi-wifi-strength-3
+    #   '󰤨', # F0928 mdi-wifi-strength-4
       
-      # Battery
-      '󰁺', # F007A mdi-battery-10
-      '󰁻', # F007B mdi-battery-20
-      '󰁼', # F007C mdi-battery-30
-      '󰁽', # F007D mdi-battery-40
-      '󰁾', # F007E mdi-battery-50
-      '󰁿', # F007F mdi-battery-60
-      '󰂀', # F0080 mdi-battery-70
-      '󰂁', # F0081 mdi-battery-80
-      '󰂂', # F0082 mdi-battery-90
-      '󰁹', # F0079 mdi-battery 100
-      ]
+    #   # Battery
+    #   '󰁺', # F007A mdi-battery-10
+    #   '󰁻', # F007B mdi-battery-20
+    #   '󰁼', # F007C mdi-battery-30
+    #   '󰁽', # F007D mdi-battery-40
+    #   '󰁾', # F007E mdi-battery-50
+    #   '󰁿', # F007F mdi-battery-60
+    #   '󰂀', # F0080 mdi-battery-70
+    #   '󰂁', # F0081 mdi-battery-80
+    #   '󰂂', # F0082 mdi-battery-90
+    #   '󰁹', # F0079 mdi-battery 100
+    #   ]
 
 color:
   - id: color_black
@@ -1095,6 +1196,15 @@ display:
           {"missing", "\U000F0028"},
         };
 
+      std::map<std::string, std::string> standort_icon_map
+        {
+          {"mdi:home", "\U000F02DC"},
+          {"mdi:briefcase", "\U000F00D6"},
+          {"mdi:school", "\U000F0474"},
+          {"mdi:soccer", "\U000F04B8"},
+          {"mdi:help-circle", "\U000F02D7"},
+        };
+
       // "clear" screen
       //it.line(0, 0, 370, 50);
       //it.line(720, 0, 370, 50);
@@ -1102,7 +1212,7 @@ display:
       //it.print(370, 720, id(font1), "Bottom right corner"); // this coordinates work for totation: 270°
       //it.rectangle(60, 20, 675, 435);  // this coordinates work for totation: 0°
       int wifi_icon_x = 440;
-      int wifi_icon_y = 710;
+      int wifi_icon_y = 770;
       char str_time[17];
       char str_date[17];
       time_t currTime = id(homeassistant_time).now().timestamp;
@@ -1111,17 +1221,20 @@ display:
       strftime(str_time, sizeof(str_time), "%H:%M", localtime(&currTime));
       strftime(str_date, sizeof(str_date), "%d.%m.%Y", localtime(&currTime));
       
+      it.rectangle(1, 1, 479, 799, color_white);
+      it.rectangle(10, 10, 469, 789, color_white);
+
       if (id(initial_data_received) == false) 
       {
 
         it.fill(color_white);
 
-        if (id(show_frame_alignment_aid_switch).state)
-        {
-          it.rectangle(25, 60, 435, 675, color_black);          
-        }
+        //if (id(show_frame_alignment_aid_switch).state)
+        //{
+          //it.rectangle(25, 60, 435, 675, color_black);          
+        //}
 
-        it.printf(240, 390, id(font_small_bold), color_black, TextAlign::TOP_CENTER, "WARTE AUF DATEN...");
+        it.printf(240, 390, id(font_medium_bold), color_black, TextAlign::TOP_CENTER, "WARTE AUF DATEN...");
 
         if (!id(auto_deep_sleep_activated).state)
         {
@@ -1135,97 +1248,111 @@ display:
         //strftime(str_time, sizeof(str_time), "%H:%M", localtime(&currTime));
         //strftime(str_date, sizeof(str_date), "%d.%m.%Y", localtime(&currTime));
 
-        it.printf(240, 710, id(font_small_book), color_black, TextAlign::TOP_CENTER, "Status von %s Uhr am %s", str_time, str_date);
+        //Fußzeile
+        it.printf(240, 770, id(font_small_book), color_black, TextAlign::TOP_CENTER, "Status von %s Uhr am %s", str_time, str_date);
 
         if(id(wifi_signal_percent).has_state()) 
         {
           if (id(wifi_signal_percent).state >= -50) {
               //Excellent
-              it.print(wifi_icon_x, wifi_icon_y, id(font_wifi_bat), color_black, TextAlign::TOP_CENTER, "󰤨");
+              it.print(wifi_icon_x, wifi_icon_y, id(font_mdi_small), color_black, TextAlign::TOP_CENTER, "󰤨");
               ESP_LOGI("WiFi", "Exellent");
           } else if (id(wifi_signal_percent).state  >= 90) {
               //Good
-              it.print(wifi_icon_x, wifi_icon_y, id(font_wifi_bat), color_black, TextAlign::TOP_CENTER, "󰤥");
+              it.print(wifi_icon_x, wifi_icon_y, id(font_mdi_small), color_black, TextAlign::TOP_CENTER, "󰤥");
               ESP_LOGI("WiFi", "Good");
           } else if (id(wifi_signal_percent).state  >= 50) {
               //Fair
-              it.print(wifi_icon_x, wifi_icon_y, id(font_wifi_bat), color_black, TextAlign::TOP_CENTER, "󰤢");
+              it.print(wifi_icon_x, wifi_icon_y, id(font_mdi_small), color_black, TextAlign::TOP_CENTER, "󰤢");
               ESP_LOGI("WiFi", "Fair");
           } else if (id(wifi_signal_percent).state  >= 30) {
               //Weak
-              it.print(wifi_icon_x, wifi_icon_y, id(font_wifi_bat), color_black, TextAlign::TOP_CENTER, "󰤟");
+              it.print(wifi_icon_x, wifi_icon_y, id(font_mdi_small), color_black, TextAlign::TOP_CENTER, "󰤟");
               ESP_LOGI("WiFi", "Weak");
           } else {
               //Unlikely working signal
-              it.print(wifi_icon_x, wifi_icon_y, id(font_wifi_bat), color_black, TextAlign::TOP_CENTER, "󰤯");
+              it.print(wifi_icon_x, wifi_icon_y, id(font_mdi_small), color_black, TextAlign::TOP_CENTER, "󰤯");
               ESP_LOGI("WiFi", "Unlikely");
           }
         } else
         {
           //no signal (yet)
-          it.print(wifi_icon_x, wifi_icon_y, id(font_wifi_bat), color_black, TextAlign::TOP_CENTER, "󰤮");
+          it.print(wifi_icon_x, wifi_icon_y, id(font_mdi_small), color_black, TextAlign::TOP_CENTER, "󰤮");
           ESP_LOGI("WiFi", "No signal");          
         }
-        if (id(show_frame_alignment_aid_switch).state)
-        {
-          it.rectangle(25, 60, 435, 675, color_white);        
-        }
+        //if (id(show_frame_alignment_aid_switch).state)
+        //{
+          //it.rectangle(25, 60, 435, 675, color_white);        
+        //}
       } else {
-        it.rectangle(10, 10, 445, 695, color_white);        
-
         // Weather Section
-        it.printf(240, 84, id(font_title), color_white, TextAlign::TOP_CENTER, "WETTER");
+        //it.printf(vertikal oben/unten , horizontal Links/rechts)
+        it.printf(230, 34, id(font_title), color_white, TextAlign::TOP_CENTER, "WETTER");
+        //it.printf(240, 84, id(font_title), color_white, TextAlign::TOP_CENTER, "WETTER");
         //it.printf(120, 160, id(font_mdi_large), color_white, TextAlign::TOP_CENTER, "%s", weather_icon_map["cloudy"].c_str());
-        it.printf(120, 160, id(font_mdi_large), color_white, TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_forecast_condition_0).state.c_str()].c_str());
-        it.printf(200, 150, id(font_large_bold), color_white, TextAlign::TOP_LEFT, "%2.0f °C", id(weather_temperature_now).state);
-        it.printf(220, 235, id(font_small_book), color_white, TextAlign::TOP_LEFT, "%2.0f %%", id(weather_humidity_now).state);
-        it.printf(320, 235, id(font_small_book), color_white, TextAlign::TOP_LEFT, "%2.0f hPa", id(weather_airpressure_now).state);
+        //wetter aktuell + Vorhersage heute
+        it.printf(120, 90, id(font_mdi_large), color_white, TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_forecast_condition_now).state.c_str()].c_str());
+        it.printf(200, 100, id(font_large_bold), color_white, TextAlign::TOP_LEFT, "%2.0f °C", id(weather_temperature_now).state);
 
-        //it.filled_rectangle(70, 270, 370, 3);
-        it.filled_rectangle(30, 270, 440, 3);
-        it.printf(85, 292, id(font_small_book), color_white, TextAlign::TOP_CENTER, "%s", id(weather_forecast_timestamp_1).state.c_str());
-        it.printf(85, 316, id(font_mdi_medium), color_white, TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_forecast_condition_1).state.c_str()].c_str());
+        it.printf(75, 185, id(font_mdi_small), color_white, TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_forecast_condition_0).state.c_str()].c_str());
+        it.printf(185, 185, id(font_small_book), color_white, TextAlign::TOP_CENTER, "%2.0f °C", id(weather_forecast_temperature_0).state);
+        it.printf(295, 185, id(font_small_book), color_white, TextAlign::TOP_CENTER, "%2.0f %%", id(weather_humidity_now).state);
+        it.printf(405, 185, id(font_small_book), color_white, TextAlign::TOP_CENTER, "%2.0f hPa", id(weather_airpressure_now).state);
+        // small Wheather Section 5 columns: 10, 56, 148, 240, 332, 424, 470
+        //Trenner
+        //it.filled_rectangle(70, 270, 370, 3); 
+        it.filled_rectangle(10, 220, 470, 3);
+        it.printf(56, 242, id(font_small_book), color_white, TextAlign::TOP_CENTER, "%s", id(weather_forecast_timestamp_1).state.c_str());
+        it.printf(56, 266, id(font_mdi_medium), color_white, TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_forecast_condition_1).state.c_str()].c_str());
         //it.printf(85, 316, id(font_mdi_medium), color_white, TextAlign::TOP_CENTER, "%s", id(weather_forecast_condition_1).state);
-        it.printf(85, 364, id(font_small_bold), color_white, TextAlign::TOP_CENTER, "%2.0f °C", id(weather_forecast_temperature_1).state);
-        //it.printf(85, 364, id(font_small_bold), color_white, TextAlign::TOP_CENTER, "%s", id(weather_forecast_temperature_1).state);
+        it.printf(56, 314, id(font_small_bold), color_white, TextAlign::TOP_CENTER, "%2.0f °C", id(weather_forecast_temperature_1).state);
+        //it.printf(56, 364, id(font_small_bold), color_white, TextAlign::TOP_CENTER, "%s", id(weather_forecast_temperature_1).state);
+        //165
+        it.printf(148, 242, id(font_small_book), color_white, TextAlign::TOP_CENTER, "%s", id(weather_forecast_timestamp_2).state.c_str());
+        it.printf(148, 266, id(font_mdi_medium), color_white, TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_forecast_condition_2).state.c_str()].c_str());
+        it.printf(148, 314, id(font_small_bold), color_white, TextAlign::TOP_CENTER, "%2.0f °C", id(weather_forecast_temperature_2).state);
+        //245
+        it.printf(240, 242, id(font_small_book), color_white, TextAlign::TOP_CENTER, "%s", id(weather_forecast_timestamp_3).state.c_str());
+        it.printf(240, 266, id(font_mdi_medium), color_white, TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_forecast_condition_3).state.c_str()].c_str());
+        it.printf(240, 314, id(font_small_bold), color_white, TextAlign::TOP_CENTER, "%2.0f °C", id(weather_forecast_temperature_3).state);
+        //325
+        it.printf(332, 242, id(font_small_book), color_white, TextAlign::TOP_CENTER, "%s", id(weather_forecast_timestamp_4).state.c_str());
+        it.printf(332, 266, id(font_mdi_medium), color_white, TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_forecast_condition_4).state.c_str()].c_str());
+        it.printf(332, 314, id(font_small_bold), color_white, TextAlign::TOP_CENTER, "%2.0f °C", id(weather_forecast_temperature_4).state);
+        //325
+        it.printf(424, 242, id(font_small_book), color_white, TextAlign::TOP_CENTER, "%s", id(weather_forecast_timestamp_5).state.c_str());
+        it.printf(424, 266, id(font_mdi_medium), color_white, TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_forecast_condition_5).state.c_str()].c_str());
+        it.printf(424, 314, id(font_small_bold), color_white, TextAlign::TOP_CENTER, "%2.0f °C", id(weather_forecast_temperature_5).state);
+        //Trenner
+        it.filled_rectangle(10, 350, 470, 3);
+        //other informations: 3 columns: 10, 87, 240, 393, 470
+        // Reihe 1 Sonne
+        //it.printf(vertikal oben/unten , horizontal Links/rechts)
+        it.printf(30, 370, id(font_mdi_medium), color_white, TextAlign::TOP_LEFT, "%s", "\U000F059C");
+        it.printf(75, 380, id(font_small_book), color_white, TextAlign::TOP_LEFT, "%s", id(weather_sunrise).state.c_str());
 
-        it.printf(165, 292, id(font_small_book), color_white, TextAlign::TOP_CENTER, "%s", id(weather_forecast_timestamp_2).state.c_str());
-        it.printf(165, 316, id(font_mdi_medium), color_white, TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_forecast_condition_2).state.c_str()].c_str());
-        it.printf(165, 364, id(font_small_bold), color_white, TextAlign::TOP_CENTER, "%2.0f °C", id(weather_forecast_temperature_2).state);
+        it.printf(173, 370, id(font_mdi_medium), color_white, TextAlign::TOP_LEFT, "%s", "\U000F059B");
+        it.printf(218, 380, id(font_small_book), color_white, TextAlign::TOP_LEFT, "%s", id(weather_sunset).state.c_str());
 
-        it.printf(245, 292, id(font_small_book), color_white, TextAlign::TOP_CENTER, "%s", id(weather_forecast_timestamp_3).state.c_str());
-        it.printf(245, 316, id(font_mdi_medium), color_white, TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_forecast_condition_3).state.c_str()].c_str());
-        it.printf(245, 364, id(font_small_bold), color_white, TextAlign::TOP_CENTER, "%2.0f °C", id(weather_forecast_temperature_3).state);
+        it.printf(316, 370, id(font_mdi_medium), color_white, TextAlign::TOP_LEFT, "%s", "\U000F17FF");
+        it.printf(371, 380, id(font_small_book), color_white, TextAlign::TOP_LEFT, "%2.1f", id(weather_uv_index_now).state);
+        
+        //Reihe 2 Wind Regen
+        it.printf(30, 410, id(font_mdi_medium), color_white, TextAlign::TOP_LEFT, "%s", "\U000F059D");
+        it.printf(75, 420, id(font_small_book), color_white, TextAlign::TOP_LEFT, "%.1f m/s", id(weather_wind_speed_now).state);
 
-        it.printf(325, 292, id(font_small_book), color_white, TextAlign::TOP_CENTER, "%s", id(weather_forecast_timestamp_4).state.c_str());
-        it.printf(325, 316, id(font_mdi_medium), color_white, TextAlign::TOP_CENTER, "%s", weather_icon_map[id(weather_forecast_condition_4).state.c_str()].c_str());
-        it.printf(325, 364, id(font_small_bold), color_white, TextAlign::TOP_CENTER, "%2.0f °C", id(weather_forecast_temperature_4).state);
+        it.printf(173, 410, id(font_mdi_medium), color_white, TextAlign::TOP_LEFT, "%s", "\U000F018C");
+        it.printf(218, 420, id(font_small_book), color_white, TextAlign::TOP_LEFT, "%s", id(wind_cardinal_direction).state.c_str());
 
-        it.filled_rectangle(70, 400, 350, 3);
+        it.printf(316, 410, id(font_mdi_medium), color_white, TextAlign::TOP_LEFT, "%s", "\U000F0596");
+        it.printf(361, 420, id(font_small_book), color_white, TextAlign::TOP_LEFT, "%.2f mm", id(weather_precipitation_amount_now).state);
 
-        it.printf(92, 420, id(font_mdi_medium), color_white, TextAlign::TOP_LEFT, "%s", "\U000F059C");
-        it.printf(135, 430, id(font_small_book), color_white, TextAlign::TOP_LEFT, "%s", id(weather_sunrise).state.c_str());
+        //Photovoltaik
 
-        it.printf(282, 420, id(font_mdi_medium), color_white, TextAlign::TOP_LEFT, "%s", "\U000F059B");
-        it.printf(325, 430, id(font_small_book), color_white, TextAlign::TOP_LEFT, "%s", id(weather_sunset).state.c_str());
-
-        it.printf(92, 460, id(font_mdi_medium), color_white, TextAlign::TOP_LEFT, "%s", "\U000F059D");
-        it.printf(135, 470, id(font_small_book), color_white, TextAlign::TOP_LEFT, "%.1f m/s", id(weather_wind_speed_now).state);
-
-        it.printf(282, 460, id(font_mdi_medium), color_white, TextAlign::TOP_LEFT, "%s", "\U000F018C");
-        it.printf(325, 470, id(font_small_book), color_white, TextAlign::TOP_LEFT, "%s", id(wind_cardinal_direction).state.c_str());
-
-        it.printf(92, 500, id(font_mdi_medium), color_white, TextAlign::TOP_LEFT, "%s", "\U000F0596");
-        it.printf(135, 510, id(font_small_book), color_white, TextAlign::TOP_LEFT, "%.2f mm", id(weather_precipitation_amount_now).state);
-
-        it.printf(282, 500, id(font_mdi_medium), color_white, TextAlign::TOP_LEFT, "%s", "\U000F17FF");
-        it.printf(325, 510, id(font_small_book), color_white, TextAlign::TOP_LEFT, "%2.1f", id(weather_uv_index_now).state);
-
-        it.printf(92, 540, id(font_mdi_medium), color_white, TextAlign::TOP_LEFT, "%s", "\U000F0D9B");
-        it.printf(135, 550, id(font_small_book), color_white, TextAlign::TOP_LEFT, "%4.0f W%", id(solar_solarleistung).state);
+        it.printf(30, 450, id(font_mdi_medium), color_white, TextAlign::TOP_LEFT, "%s", "\U000F0D9B");
+        it.printf(75, 460, id(font_small_book), color_white, TextAlign::TOP_LEFT, "%.0f W%", id(solar_solarleistung).state);
 
         //it.printf(282, 540, id(font_mdi_medium), color_white, TextAlign::TOP_LEFT, "%s", "\U000F0B6C");
-        
         int icon_index = 0;
         const char* battery_icons[] = {
           "",         // index 0 (unused)
@@ -1253,43 +1380,85 @@ display:
             else if (level >= 20) icon_index = 2;
             else icon_index = 1;
           }
-        // Diese Zeile ist jetzt korrekt, weil Variablen im Scope sind
         if(id(solar_akku_level).has_state()) 
         {
-          it.print(282, 550, id(font_wifi_bat), color_white, TextAlign::TOP_CENTER, battery_icons[icon_index]);
+          it.print(173, 450, id(font_mdi_medium), color_white, TextAlign::TOP_LEFT, battery_icons[icon_index]);
         }
-        //it.print(320, 550, id(font_wifi_bat), color_white, TextAlign::TOP_CENTER, battery_icons[icon_index]);
-        it.printf(320, 550, id(font_small_book), color_white, TextAlign::TOP_LEFT, "%3.0f%%", id(solar_akku_level).state);
+        it.printf(218, 460, id(font_small_book), color_white, TextAlign::TOP_LEFT, "%.0f%%", id(solar_akku_level).state);
+        //Trenner
+        it.filled_rectangle(10, 500, 470, 3);
 
-        //it.filled_rectangle(70, 550, 350, 3);
+        it.printf(20, 550, id(font_medium_bold), color_white, TextAlign::BASELINE , "CA");
+        it.printf(70, 550, id(font_mdi_medium), color_white, TextAlign::BASELINE , "%s", standort_icon_map[id(person_christian_artner).state.c_str()].c_str());
 
-        //the following makes only sense when the device is not used in battery mode since the historical values are lost at device reboot
-        //it.graph(80, 570, id(air_pressure_graph));
+        it.printf(130, 550, id(font_medium_bold), color_white, TextAlign::BASELINE , "VA");
+        it.printf(180, 550, id(font_mdi_medium), color_white, TextAlign::BASELINE , "%s", standort_icon_map[id(person_verena_artner).state.c_str()].c_str());
 
+        it.printf(240, 550, id(font_medium_bold), color_white, TextAlign::BASELINE , "KA");
+        it.printf(290, 550, id(font_mdi_medium), color_white, TextAlign::BASELINE, "%s", standort_icon_map[id(person_konstantin_artner).state.c_str()].c_str());
 
-        it.printf(240, 710, id(font_small_book), color_white, TextAlign::TOP_CENTER, "Status von %s Uhr am %s", str_time, str_date);
+        it.printf(350, 550, id(font_medium_bold), color_white, TextAlign::BASELINE, "JA");
+        it.printf(400, 550, id(font_mdi_medium), color_white, TextAlign::BASELINE, "%s", standort_icon_map[id(person_jonathan_artner).state.c_str()].c_str());
+
+        //Trenner
+        it.filled_rectangle(10, 570, 470, 3);
+
+        // Text vom Sensor holen
+        std::string text = id(kalender_uebersicht).state;
+        size_t start = 0;
+        int y = 600;
+
+        while (start < text.length() && y <= 770) {
+          size_t sep = text.find('|', start);
+          std::string line;
+          if (sep == std::string::npos) {
+            line = text.substr(start);
+            start = text.length();  // Ende erreicht
+          } else {
+            line = text.substr(start, sep - start);
+            start = sep + 1;
+          }
+          // Entferne führende und abschließende Leerzeichen
+          //size_t first = line.find_first_not_of(" ");
+          //size_t last = line.find_last_not_of(" ");
+          //if (first != std::string::npos && last != std::string::npos) {
+            //line = line.substr(first, last - first + 1);
+          //}
+          if (!line.empty()) {
+            bool is_highlight = line.length() >= 2 && line.front() == '_' && line.back() == '_';
+            if (is_highlight) {
+              line = line.substr(1, line.length() - 2);  // entferne führendes und abschließendes "_"
+              it.print(20, y, id(font_small_bold), line.c_str());
+            } else {
+              it.print(20, y, id(font_small_book), line.c_str());
+            }
+            y += 20;
+          }
+        }
+                //Fußzeile
+        it.printf(240, 770, id(font_small_book), color_white, TextAlign::TOP_CENTER, "Status von %s Uhr am %s", str_time, str_date);
 
         if(id(wifi_signal_percent).has_state()) 
         {
           if (id(wifi_signal_percent).state >= -50) {
               //Excellent
-              it.print(wifi_icon_x, wifi_icon_y, id(font_wifi_bat), color_white, TextAlign::TOP_CENTER, "󰤨");
+              it.print(wifi_icon_x, wifi_icon_y, id(font_mdi_small), color_white, TextAlign::TOP_CENTER, "󰤨");
               //ESP_LOGI("WiFi", "Exellent");
             } else if (id(wifi_signal_percent).state  >= 90) {
               //Good
-              it.print(wifi_icon_x, wifi_icon_y, id(font_wifi_bat), color_white, TextAlign::TOP_CENTER, "󰤥");
+              it.print(wifi_icon_x, wifi_icon_y, id(font_mdi_small), color_white, TextAlign::TOP_CENTER, "󰤥");
               //ESP_LOGI("WiFi", "Good");
             } else if (id(wifi_signal_percent).state  >= 50) {
               //Fair
-              it.print(wifi_icon_x, wifi_icon_y, id(font_wifi_bat), color_white, TextAlign::TOP_CENTER, "󰤢");
+              it.print(wifi_icon_x, wifi_icon_y, id(font_mdi_small), color_white, TextAlign::TOP_CENTER, "󰤢");
               //ESP_LOGI("WiFi", "Fair");
             } else if (id(wifi_signal_percent).state  >= 30) {
               //Weak
-              it.print(wifi_icon_x, wifi_icon_y, id(font_wifi_bat), color_white, TextAlign::TOP_CENTER, "󰤟");
+              it.print(wifi_icon_x, wifi_icon_y, id(font_mdi_small), color_white, TextAlign::TOP_CENTER, "󰤟");
               //ESP_LOGI("WiFi", "Weak");
             } else {
               //Unlikely working signal
-              it.print(wifi_icon_x, wifi_icon_y, id(font_wifi_bat), color_white, TextAlign::TOP_CENTER, "󰤯");
+              it.print(wifi_icon_x, wifi_icon_y, id(font_mdi_small), color_white, TextAlign::TOP_CENTER, "󰤯");
               //ESP_LOGI("WiFi", "Unlikely");
             }
         }
