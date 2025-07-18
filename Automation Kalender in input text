@@ -1,6 +1,8 @@
-alias: TEST
+alias: Update Dashboard 01 Kalender
 description: ""
-triggers: []
+triggers:
+  - trigger: time_pattern
+    minutes: "15"
 conditions: []
 actions:
   - action: calendar.get_events
@@ -15,13 +17,47 @@ actions:
       entity_id:
         - calendar.familie
         - calendar.geburtstage
+  - variables:
+      agenda_copy: "{{ agenda }}"
+  - alias: Test Gruppierung Tag --> funktioniert nun auch
+    action: input_text.set_value
+    data:
+      value: >-
+        {% set ns = namespace(letzter_tag = '') %}{% for event in
+        agenda["calendar.familie"]["events"] %}{% set start_dt =
+        as_datetime(event.start) %}{% set start_dt = as_datetime(event.start)
+        %}{% set end_dt = as_datetime(event.end) %}{% set tag =
+        start_dt.strftime('%a %d.%m') | replace('Mon','MO') |
+        replace('Tue','DI') | replace('Wed','MI') | replace('Thu','DO') |
+        replace('Fri','FR') | replace('Sat','SS') | replace('Sun','SO') %}{% if
+        tag != ns.letzter_tag %}_{{ tag }}:_|{% set ns.letzter_tag = tag %}{%
+        endif %}{% if 'T' in event.start %}   {{ start_dt.strftime('%H:%M') }}{%
+        endif %}{% if 'T' in event.end %}-{{ end_dt.strftime('%H:%M') }}: {{
+        event.summary }}|{% else %}   {{ event.summary }}|{% endif %}{% endfor
+        %}
+    target:
+      entity_id: input_text.dashboard_01_kalender
+    enabled: true
   - action: input_text.set_value
     metadata: {}
     data:
       value: >-
-        {% for event in agenda["calendar.familie"]["events"] %}{% set start_dt = as_datetime(event.start) %}{% set end_dt = as_datetime(event.end) %}{{ start_dt.strftime('%a %d.%m') | replace('Mon','Mo') | replace('Tue','Di') | replace('Wed','Mi') | replace('Thu','Do') | replace('Fri','Fr') | replace('Sat','Sa') | replace('Sun','So') }}{% if 'T' in event.start %} ab {{ start_dt.strftime('%H:%M') }}{% endif %}{% if 'T' in event.end %} bis {{ end_dt.strftime('%H:%M') }}{% endif %}: {{ event.summary }}|{% endfor %}{% for event in agenda["calendar.geburtstage"]["events"] %}{% set start_dt = as_datetime(event.start) %}Geburtstag:|{{ start_dt.strftime('%a %d.%m.%Y') | replace('Mon','Mo') | replace('Tue','Di') | replace('Wed','Mi') | replace('Thu','Do') | replace('Fri','Fr') | replace('Sat','Sa') | replace('Sun','So') }}: {{ event.summary }}{% endfor %}
+        {% for event in agenda["calendar.familie"]["events"] %}{% set start_dt =
+        as_datetime(event.start) %}{% set end_dt = as_datetime(event.end) %}{{
+        start_dt.strftime('%a %d.%m') | replace('Mon','Mo') |
+        replace('Tue','Di') | replace('Wed','Mi') | replace('Thu','Do') |
+        replace('Fri','Fr') | replace('Sat','Sa') | replace('Sun','So') }}{% if
+        'T' in event.start %} ab {{ start_dt.strftime('%H:%M') }}{% endif %}{%
+        if 'T' in event.end %} bis {{ end_dt.strftime('%H:%M') }}{% endif %}: {{
+        event.summary }}|{% endfor %}{% for event in
+        agenda["calendar.geburtstage"]["events"] %}{% set start_dt =
+        as_datetime(event.start) %}Geburtstag:|{{ start_dt.strftime('%a
+        %d.%m.%Y') | replace('Mon','Mo') | replace('Tue','Di') |
+        replace('Wed','Mi') | replace('Thu','Do') | replace('Fri','Fr') |
+        replace('Sat','Sa') | replace('Sun','So') }}: {{ event.summary }}{%
+        endfor %}
     target:
       entity_id:
         - input_text.dashboard_01_kalender
-mode: single
-#value input_text muss ein einzeiler sein!
+    enabled: false
+    alias: Text ohne Gruppierung --> Funktioniert
