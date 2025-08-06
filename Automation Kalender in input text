@@ -23,18 +23,36 @@ actions:
     action: input_text.set_value
     data:
       value: >-
-        {% set output %}{% set ns = namespace(letzter_tag = '') %}{% for event
-        in agenda["calendar.familie"]["events"] %}{% set start_dt =
-        as_datetime(event.start) %}{% set start_dt = as_datetime(event.start)
-        %}{% set end_dt = as_datetime(event.end) %}{% set tag =
-        start_dt.strftime('%a %d.%m') | replace('Mon','MO') |
+        {% set output %}
+
+        {% set ns = namespace(letzter_tag = '') -%}
+
+        {% for event in agenda["calendar.familie"]["events"] -%}
+
+        {% set start_dt = as_datetime(event.start) -%}
+
+        {% set end_dt = as_datetime(event.end) -%}
+
+        {% set start_tag = start_dt.strftime('%a %d.%m') | replace('Mon','MO') |
         replace('Tue','DI') | replace('Wed','MI') | replace('Thu','DO') |
-        replace('Fri','FR') | replace('Sat','SA') | replace('Sun','SO') %}{% if
-        tag != ns.letzter_tag %}_{{ tag }}:_|{% set ns.letzter_tag = tag %}{%
-        endif %}{% if 'T' in event.start %}   {{ start_dt.strftime('%H:%M') }}{%
-        endif %}{% if 'T' in event.end %}-{{ end_dt.strftime('%H:%M') }}: {{
-        event.summary }}|{% else %}   {{ event.summary }}|{% endif %}{% endfor
-        %}{% endset %}{{ output[:254] }} ##erweiterung um Einzeiler mit maximal 254 zeichen
+        replace('Fri','FR') | replace('Sat','SA') | replace('Sun','SO') -%}
+
+        {% set end_tag = end_dt.strftime('%a %d.%m') | replace('Mon','MO') |
+        replace('Tue','DI') | replace('Wed','MI') | replace('Thu','DO') |
+        replace('Fri','FR') | replace('Sat','SA') | replace('Sun','SO') -%}
+
+        {% if start_tag != ns.letzter_tag %}_{% if end_tag != start_tag %}{{
+        start_tag }}-{{ end_tag }}{% else %}{{ start_tag }}{%endif %}:_|{% set
+        ns.letzter_tag = start_tag %}{%endif %}{% if 'T' in event.start %}   {{
+        start_dt.strftime('%H:%M') }}{% endif %}{% if 'T' in event.end %}-{{
+        end_dt.strftime('%H:%M') }}: {{ event.summary[:25] }}|{% else %}   {{
+        event.summary[:30] }}|{% endif %}
+
+        {%- endfor %}
+
+        {% endset %}
+
+        {{ output[:254] }}
     target:
       entity_id: input_text.dashboard_01_kalender
     enabled: true
@@ -66,12 +84,35 @@ actions:
     data:
       title: Daily agenda for {{ now().date() }}
       message: >-
-        Privater Kalender:
+        {% set output %}
 
-        {% for event in agenda["calendar.familie"]["events"] %}     {{
-        event.start}}: {{ event.summary }}<br>{% endfor %}     Your work
-        calendar for today:     {% for event in
-        agenda["calendar.geburtstage"]["events"] %}     {{ event.start}}: {{
-        event.summary }}<br>     {% endfor %}
+        {% set ns = namespace(letzter_tag = '') -%}
+
+        {% for event in agenda["calendar.familie"]["events"] -%}
+
+        {% set start_dt = as_datetime(event.start) -%}
+
+        {% set end_dt = as_datetime(event.end) -%}
+
+        {% set end_tag = end_dt.strftime('%a %d.%m') | replace('Mon','MO') |
+        replace('Tue','DI') | replace('Wed','MI') | replace('Thu','DO') |
+        replace('Fri','FR') | replace('Sat','SA') | replace('Sun','SO') -%}
+
+        {% set start_tag = start_dt.strftime('%a %d.%m') | replace('Mon','MO') |
+        replace('Tue','DI') | replace('Wed','MI') | replace('Thu','DO') |
+        replace('Fri','FR') | replace('Sat','SA') | replace('Sun','SO') -%}
+
+        {% if start_tag != ns.letzter_tag %}_{% if end_tag != start_tag %}{{
+        start_tag }}-{{ end_tag }}{% else %}{{ start_tag }}{%endif %}:_|{% set
+        ns.letzter_tag = start_tag %}{%endif %}{% if 'T' in event.start %}   {{
+        start_dt.strftime('%H:%M') }}{% endif %}{% if 'T' in event.end %}-{{
+        end_dt.strftime('%H:%M') }}: {{ event.summary[:25] }}|{% else %}   {{
+        event.summary[:30] }}|{% endif %}
+
+        {%- endfor %}
+
+        {% endset %}
+
+        {{ output[:254] }}
     enabled: false
 mode: single
